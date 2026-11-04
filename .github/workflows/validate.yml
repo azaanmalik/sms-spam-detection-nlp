@@ -1,0 +1,58 @@
+name: NLP repository validation
+on:
+  push:
+    paths:
+      - '**/*.ipynb'
+      - '**/*.py'
+      - '**/*.csv'
+      - 'requirements.txt'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    paths:
+      - '**/*.ipynb'
+      - '**/*.py'
+      - '**/*.csv'
+      - 'requirements.txt'
+      - '.github/workflows/validate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate notebook JSON and Python syntax
+        run: |
+          python - <<'PY'
+          import ast, json, pathlib
+          notebooks = list(pathlib.Path('.').rglob('*.ipynb'))
+          assert notebooks, 'No notebooks found'
+          for path in notebooks:
+              nb = json.loads(path.read_text(encoding='utf-8'))
+              assert nb.get('cells'), f'No cells in {path}'
+              for cell in nb['cells']:
+                  if cell.get('cell_type') == 'code':
+                      source = ''.join(cell.get('source', []))
+                      if not any(line.lstrip().startswith(('%', '!')) for line in source.splitlines()):
+                          try: ast.parse(source)
+                          except SyntaxError as e: raise AssertionError(f'{path}: {e}')
+          for path in pathlib.Path('.').rglob('*.py'):
+              ast.parse(path.read_text(encoding='utf-8'))
+          print(f'Validated {len(notebooks)} notebooks')
+          PY
+      - name: Validate saved evaluation CSVs
+        run: |
+          python - <<'PY'
+          import csv, pathlib
+          files=list(pathlib.Path('outputs').rglob('*.csv'))
+          assert files, 'Missing saved output CSV files'
+          for p in files:
+              with p.open(encoding='utf-8-sig', newline='') as f:
+                  rows=list(csv.reader(f))
+              assert len(rows)>1, f'Empty or header-only CSV: {p}'
+          print(f'Validated {len(files)} saved output CSVs')
+          PY
