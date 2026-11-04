@@ -1,5 +1,10 @@
 # SMS Spam Detection with TF-IDF, Naive Bayes, and DistilBERT
 
+![Python](https://img.shields.io/badge/Python-NLP-3776AB?logo=python&logoColor=white) ![PyTorch](https://img.shields.io/badge/PyTorch-Deep_Learning-EE4C2C?logo=pytorch&logoColor=white) ![Transformers](https://img.shields.io/badge/Hugging_Face-Transformers-FFD21E?logo=huggingface&logoColor=black) ![License](https://img.shields.io/badge/License-MIT-2EA44F)
+
+[Reproducibility guide](docs/REPRODUCIBILITY.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md)
+
+
 An end-to-end natural language processing project for classifying SMS messages as spam or ham. The repository compares a lightweight traditional machine learning baseline using TF-IDF with Multinomial Naive Bayes against a fine-tuned DistilBERT transformer model.
 
 The project is structured for reproducibility and portfolio presentation: notebooks, dataset, evaluation outputs, figures, and the final report are all organized in clear folders.
@@ -56,7 +61,7 @@ The source file is included at `data/SMSSpamCollection.csv` and uses the common 
 | TF-IDF + Multinomial Naive Bayes | 0.9710 | 0.9903 | 0.7786 | 0.8718 |
 | Fine-tuned DistilBERT | 0.9913 | 0.9841 | 0.9466 | 0.9650 |
 
-DistilBERT achieved the strongest overall performance, especially on recall and F1-score, making it better suited for identifying spam messages that the baseline model missed.
+On the saved evaluation results, DistilBERT achieved the strongest overall performance, especially on recall and F1-score, making it better suited for identifying spam messages that the baseline model missed.
 
 ## Visual Results
 
@@ -76,12 +81,14 @@ DistilBERT achieved the strongest overall performance, especially on recall and 
 
 ![DistilBERT training loss curve](outputs/figures/figure4_distilbert_training_loss.png)
 
+**Evaluation note:** The figures below are recorded experiment outputs, not a guarantee of performance on unseen real-world messages. The training notebooks have not been re-executed as part of this documentation update.
+
 ## Getting Started
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/sms-spam-detection-nlp.git
+git clone https://github.com/azaanmalik/sms-spam-detection-nlp.git
 cd sms-spam-detection-nlp
 ```
 
